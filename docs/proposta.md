@@ -1,12 +1,12 @@
 # Proposta do Projeto - App Horta Comunitária
 
 ## 1. Visão do Produto
-Para coordenadores e voluntários de hortas comunitárias
-Que enfrentam dificuldades na comunicação descentralizada e na sobrecarga de gestão de materiais
-O App Horta Comunitária é um aplicativo móvel de gestão e colaboração
-Que centraliza o manejo de canteiros, o controle de estoque e a comunicação em uma plataforma única
-Diferente de fluxos baseados em grupos de WhatsApp e planilhas manuais isoladas
-Nosso produto promove o engajamento contínuo através de um fórum integrado e mapeamento interativo dos setores ecológicos.
+Para coordenadores e voluntários de hortas comunitárias   
+Que enfrentam dificuldades na comunicação descentralizada e na sobrecarga de gestão de materiais    
+O App Horta Comunitária é um aplicativo móvel de gestão e colaboração    
+Que centraliza o manejo de canteiros, o controle de estoque e a comunicação em uma plataforma única    
+Diferente de fluxos baseados em grupos de WhatsApp e planilhas manuais isoladas    
+Nosso produto promove o engajamento contínuo através de um fórum integrado e mapeamento interativo dos setores ecológicos.    
 
 ## 2. Definição do MVP
 O MVP focará em estabelecer a fundação do processo de engenharia e as funcionalidades essenciais de gestão.
