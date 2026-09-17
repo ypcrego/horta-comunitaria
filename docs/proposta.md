@@ -26,7 +26,7 @@ O backlog priorizado e estimado encontra-se no GitHub Projects do repositório:
 
 ## 4. Stack Tecnológico e Justificativa
 * **Frontend:** Flutter/Dart.
-* **Backend:** PostgreSQL + [Definir se usarão Java/Spring ou C#/.NET].
+* **Backend:** PostgreSQL no DB + Stack a definir no backend
 * **Justificativa:** A stack backend fortemente tipada e relacional garante robustez para a modelagem da horta e viabiliza a configuração de testes automatizados e pipelines de Integração Contínua (CI) exigidos no processo. O Flutter viabiliza o cliente mobile.
 
 ## 5. Acordo de Processo
