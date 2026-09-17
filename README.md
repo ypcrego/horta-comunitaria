@@ -10,6 +10,6 @@
 Repositório destinado à disciplina de Processos de Software. O foco deste projeto é aplicar práticas de engenharia de software (Integração Contínua, Kanban, Revisão de código e Métricas DORA) em um aplicativo de gestão de hortas comunitárias.
 
 ## Entregas Sprint 0
-- [Proposta do Projeto - PENDING](docs/proposta.md)
+- [Proposta do Projeto](docs/proposta.md)
 - [Quadro Kanban](https://github.com/users/ypcrego/projects/1)
-- [Vídeo de Apresentação - PENDING]([])
+- [Vídeo de Apresentação](https://drive.google.com/file/d/1wHzmSL-1D7iDGf4SEYK8pQOc51yhWb7s/view?usp=drive_link)
