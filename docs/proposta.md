@@ -38,7 +38,7 @@ O backlog priorizado e estimado encontra-se no GitHub Projects do repositório:
 * **Definição de Pronto (DoD):** Código mergeado em `main` sem conflitos; Pipeline de CI verde (Build e Testes passando); Revisão de código aprovada.
 * **Papéis:** Equipe multifuncional (ambos atuam como desenvolvedores e PO). A revisão de código é obrigatoriamente cruzada (quem abre o Pull Request não aprova o próprio PR).
 * **Ferramentas:** GitHub (Repositório, Kanban, Actions), WhatsApp (Dailies).
-* **WIP Limits:** Máximo de 2 itens em "Em progresso" e 2 itens em "Em revisão".
+* **WIP Limits:** Máximo de 4 itens no Sprint Backlog e 2 itens em "Em progresso".
 
 ## 6. Equipe
 * Georg Nunes - Matrícula: 20260001606 - Papel: Desenvolvedor / Revisor
