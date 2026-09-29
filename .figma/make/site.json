@@ -1,0 +1,10 @@
+{
+  "description": "Manage community garden activities by tracking food production, scheduling events, and controlling user access for coordinators and volunteers.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
