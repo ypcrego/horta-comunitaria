@@ -40,7 +40,7 @@ O backlog priorizado e estimado encontra-se no GitHub Projects do repositório:
 * **Ferramentas:** GitHub (Repositório, Kanban, Actions), WhatsApp (Dailies).
 * **WIP Limits:** Máximo de 4 itens no Sprint Backlog e 2 itens em "Em progresso".
 * **Prática XP (refatoração):** refatorações só acontecem com testes de caracterização passando antes e depois; todo PR de refatoração roda `pnpm test` e `pnpm build`.
-* **Fluxo de trabalho:** commit e PR no mesmo dia do trabalho, em branch curta ligada a uma issue; o cartão do quadro muda de coluna no mesmo dia.
+* **Fluxo de trabalho:** commit no mesmo dia do trabalho, em branch curta ligada a uma issue; o cartão do quadro muda de coluna no mesmo dia.
 * **Sprint 2:** Integração Contínua com GitHub Actions (build e testes, com gate em PR).
 
 ## 6. Equipe
