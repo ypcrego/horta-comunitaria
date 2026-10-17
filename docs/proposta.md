@@ -33,12 +33,15 @@ O backlog priorizado e estimado encontra-se no GitHub Projects do repositório:
 * **Cadência:** Sprints de 2 semanas. Planejamento às segundas-feiras; Review e Retrospectiva às sextas-feiras da segunda semana.
 * **Cerimônias:** 
   * *Planning:* 1h no início da sprint.
-  * *Daily:* Assíncrona via WhatsApp (o que fiz, o que farei, impedimentos).
+  * *Daily:* Assíncrona via WhatsApp (o que fiz, o que farei, impedimentos). A Daily também confere o quadro e o WIP.
   * *Review & Retrospectiva:* 1h no último dia da sprint.
-* **Definição de Pronto (DoD):** Código mergeado em `main` sem conflitos; Pipeline de CI verde (Build e Testes passando); Revisão de código aprovada.
+* **Definição de Pronto (DoD):** Código mergeado em `main` sem conflitos; `pnpm test` e `pnpm build` passando; Revisão de código aprovada.
 * **Papéis:** Equipe multifuncional (ambos atuam como desenvolvedores e PO). A revisão de código é obrigatoriamente cruzada (quem abre o Pull Request não aprova o próprio PR).
 * **Ferramentas:** GitHub (Repositório, Kanban, Actions), WhatsApp (Dailies).
 * **WIP Limits:** Máximo de 4 itens no Sprint Backlog e 2 itens em "Em progresso".
+* **Prática XP (refatoração):** refatorações só acontecem com testes de caracterização passando antes e depois; todo PR de refatoração roda `pnpm test` e `pnpm build`.
+* **Fluxo de trabalho:** commit e PR no mesmo dia do trabalho, em branch curta ligada a uma issue; o cartão do quadro muda de coluna no mesmo dia.
+* **Sprint 2:** Integração Contínua com GitHub Actions (build e testes, com gate em PR).
 
 ## 6. Equipe
 * Georg Nunes - Matrícula: 20260001606 - Papel: Desenvolvedor / Revisor
