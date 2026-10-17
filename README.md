@@ -16,9 +16,9 @@ Repositório destinado à disciplina de Processos de Software. O foco deste proj
 
 ## Entregas Sprint 1
 - Incremento: protótipo da horta modularizado em `src/features/*` e `src/shared/*`, com testes de caracterização.
-- [Quadro Kanban](https://github.com/users/ypcrego/projects/1) (políticas das colunas e limites de WIP na descrição de cada coluna)
+- [Quadro Kanban](https://github.com/users/ypcrego/projects/1)
 - [Retrospectiva 01](docs/retrospectiva-01.md)
-- [Vídeo da Sprint 1](COLAR_LINK_AQUI)
+- [Vídeo da Sprint 1](https://drive.google.com/file/d/1hdA38-KrGc8l4fvo7gj-1uLCanjATNtN/view?usp=drive_link)
 
 ## Como rodar
 Pré-requisitos: Node 22 e pnpm 10 (versões em `.mise.toml`).
