@@ -38,12 +38,12 @@ Logins de demonstração (dados mock, sem banco de dados):
 | Coordenador | coordenador@ufrn.br | senha123 |
 | Voluntário | voluntario@ufrn.br | senha123 |
 
-O que esperar: o Coordenador cadastra produção (em kg) e agenda eventos. O Voluntário apenas visualiza, com o aviso de "somente leitura".
+O que esperar: o Coordenador cadastra produção, agenda eventos e gerencia o estoque (cadastro de ferramentas e devoluções). O Voluntário visualiza os dados e pode solicitar a retirada de ferramentas disponíveis.
 
 ## Estrutura
 ```
 src/
-  features/   auth, dashboard, production, events
+  features/   auth, dashboard, production, events, inventory
   shared/     types, constants, utils, components
   App.tsx     composição (navegação e sessão)
 ```
