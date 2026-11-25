@@ -2,6 +2,14 @@
 
 React + Vite + Tailwind CSS project running inside Figma Make.
 
+## Idioma e acentuação
+
+Todo texto em português neste repositório — títulos e corpos de PR/issues, comentários, README, docs e mensagens de commit — deve usar português brasileiro com acentuação e cedilha corretas. Nunca remova acentos para contornar problemas de encoding do shell ou da API.
+
+- Ao criar ou editar textos no GitHub com `gh`, grave o conteúdo em um arquivo UTF-8 e use `--body-file`; para títulos e JSON, use `gh api` com `-F campo=@arquivo`.
+- Prefixos de Conventional Commits (`feat:`, `fix:`, `docs:`, `ci:`, `test:`) podem permanecer em inglês; o restante do texto deve ser acentuado quando estiver em português.
+- Antes de publicar, confira o texto renderizado no GitHub para garantir que os acentos não foram corrompidos.
+
 ## Development Server
 
 A Vite development server is **already running** on `$PORT` (default 8443). You don't need to start it manually.
