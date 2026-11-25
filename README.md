@@ -26,6 +26,7 @@ Pré-requisitos: Node 22 e pnpm 10 (versões em `.mise.toml`).
 ```bash
 pnpm install
 pnpm dev      # servidor de desenvolvimento
+pnpm lint     # lint (Oxlint)
 pnpm test     # testes (Vitest)
 pnpm build    # build de produção
 ```
