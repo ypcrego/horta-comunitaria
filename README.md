@@ -51,6 +51,17 @@ src/
 ## Prática XP da Sprint 1
 **Refatoração com testes de caracterização.** Os testes de `src/App.test.tsx` foram escritos sobre o protótipo monolítico antes da modularização e passam sem alteração depois dela. Os dois PRs de refatoração descrevem isso.
 
+## CI e proteção da main
+O workflow [`CI`](.github/workflows/ci.yml) roda lint (`pnpm lint`), testes (`pnpm test --run`) e build (`pnpm build`) em todo push e pull request para a `main`.
+
+A `main` exige o check **Build & Test** verde e uma revisão cruzada, e as regras valem também para administradores. A configuração pode ser conferida com:
+
+```bash
+gh api repos/ypcrego/horta-comunitaria/branches/main/protection
+```
+
+**Evidência de bloqueio:** [PR #37 — teste proposital quebrado](https://github.com/ypcrego/horta-comunitaria/pull/37). O CI falha e o merge permanece bloqueado pela proteção da branch.
+
 ## Checklist da Sprint 1
 - [ ] Incremento funcional em main
 - [ ] Kanban com WIP limits configurados
