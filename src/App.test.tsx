@@ -5,6 +5,8 @@ import App from './App'
 describe('Caracterização do App (comportamento original)', () => {
   beforeEach(() => {
     vi.useFakeTimers()
+    // Fixa o relógio na data base do protótipo para evitar falhas quando os eventos mock ficarem no passado
+    vi.setSystemTime(new Date('2026-10-14T12:00:00Z'))
   })
 
   afterEach(() => {
