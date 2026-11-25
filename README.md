@@ -26,6 +26,7 @@ Pré-requisitos: Node 22 e pnpm 10 (versões em `.mise.toml`).
 ```bash
 pnpm install
 pnpm dev      # servidor de desenvolvimento
+pnpm lint     # lint (Oxlint)
 pnpm test     # testes (Vitest)
 pnpm build    # build de produção
 ```
@@ -49,6 +50,17 @@ src/
 
 ## Prática XP da Sprint 1
 **Refatoração com testes de caracterização.** Os testes de `src/App.test.tsx` foram escritos sobre o protótipo monolítico antes da modularização e passam sem alteração depois dela. Os dois PRs de refatoração descrevem isso.
+
+## CI e proteção da main
+O workflow [`CI`](.github/workflows/ci.yml) roda lint (`pnpm lint`), testes (`pnpm test --run`) e build (`pnpm build`) em todo push e pull request para a `main`.
+
+A `main` exige o check **Build & Test** verde e uma revisão cruzada, e as regras valem também para administradores. A configuração pode ser conferida com:
+
+```bash
+gh api repos/ypcrego/horta-comunitaria/branches/main/protection
+```
+
+**Evidência de bloqueio:** [PR #40 — teste proposital quebrado](https://github.com/ypcrego/horta-comunitaria/pull/40). O CI falha e o merge permanece bloqueado pela proteção da branch.
 
 ## Checklist da Sprint 1
 - [ ] Incremento funcional em main
