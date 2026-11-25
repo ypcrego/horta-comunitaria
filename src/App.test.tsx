@@ -37,7 +37,8 @@ describe('Caracterização do App (comportamento original)', () => {
 
       loginAs('coordenador@ufrn.br', 'senha123')
 
-      expect(screen.getByText('Bom dia, Ana.')).toBeInTheDocument()
+      // Teste propositalmente quebrado para comprovar o bloqueio de merge na main (issue #21).
+      expect(screen.getByText('Texto proposital que não existe')).toBeInTheDocument()
       expect(screen.getByText('Você tem acesso completo ao sistema de gestão.')).toBeInTheDocument()
       expect(screen.getByText('Ana Beatriz Costa')).toBeInTheDocument()
       expect(screen.getByText('Coordenador(a)')).toBeInTheDocument()
