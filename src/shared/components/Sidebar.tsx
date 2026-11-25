@@ -37,6 +37,21 @@ export function Sidebar({
       coordOnly: false,
     },
     {
+      id: 'estoque',
+      label: 'Estoque',
+      icon: (
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <rect x="1.5" y="5" width="13" height="9" rx="1.5" stroke="currentColor" strokeWidth="1.3" />
+          <path
+            d="M5.5 5V3.5A1.5 1.5 0 017 2h2a1.5 1.5 0 011.5 1.5V5"
+            stroke="currentColor"
+            strokeWidth="1.3"
+          />
+          <path d="M1.5 8.5h13" stroke="currentColor" strokeWidth="1.3" />
+        </svg>
+      ),
+    },
+    {
       id: 'eventos',
       label: 'Eventos',
       icon: (

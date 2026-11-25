@@ -5,6 +5,7 @@ import { Sidebar } from '@/shared/components'
 import { LoginPage } from '@/features/auth'
 import { Dashboard } from '@/features/dashboard'
 import { ProducaoPage } from '@/features/production'
+import { EstoquePage } from '@/features/inventory'
 import { EventosPage } from '@/features/events'
 
 export default function App() {
@@ -43,6 +44,7 @@ export default function App() {
         {activeTab === 'producao' && (
           <ProducaoPage user={user} productions={productions} onAdd={addProduction} />
         )}
+        {activeTab === 'estoque' && <EstoquePage user={user} />}
         {activeTab === 'eventos' && (
           <EventosPage user={user} events={events} onAdd={addEvent} />
         )}
