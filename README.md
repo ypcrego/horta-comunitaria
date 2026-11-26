@@ -38,7 +38,7 @@ Logins de demonstração (dados mock, sem banco de dados):
 | Coordenador | coordenador@ufrn.br | senha123 |
 | Voluntário | voluntario@ufrn.br | senha123 |
 
-O que esperar: o Coordenador cadastra produção, agenda eventos e gerencia o estoque (cadastro de ferramentas e devoluções). O Voluntário visualiza os dados e pode solicitar a retirada de ferramentas disponíveis.
+O que esperar: o Coordenador cadastra produção (em kg), agenda eventos, gerencia o cadastro de canteiros e o estoque (cadastro de ferramentas e devoluções). O Voluntário visualiza os dados, pode solicitar a retirada de ferramentas disponíveis e toda a equipe pode registrar plantio, manejo e colheita no mapa de canteiros. Os canteiros e o histórico de plantio ficam salvos no `localStorage` do navegador. O histórico pode ser filtrado por setor ou canteiro, aceita data retroativa e pode ser exportado em CSV.
 
 ## Estrutura
 ```
