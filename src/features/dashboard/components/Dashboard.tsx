@@ -1,6 +1,6 @@
 import type { User, Production, Event } from '@/shared/types'
 import { PLANTING_RECORD_TYPE_LABELS } from '@/shared/constants'
-import { today, formatDate, formatDateTime } from '@/shared/utils'
+import { today, formatDate } from '@/shared/utils'
 import { TypeBadge } from '@/shared/components'
 import { useCanteiros } from '@/features/production/hooks/useCanteiros'
 import { getCanteiroStats } from '@/features/production/lib/canteiros'
@@ -136,8 +136,8 @@ export function Dashboard({
           {lastRecord
             ? `Última atividade: ${PLANTING_RECORD_TYPE_LABELS[lastRecord.type]} de ${
                 lastRecord.culture
-              } no ${lastRecord.canteiroName}, por ${lastRecord.actor} em ${formatDateTime(
-                lastRecord.createdAt,
+              } no ${lastRecord.canteiroName}, por ${lastRecord.actor} em ${formatDate(
+                lastRecord.date,
               )}.`
             : 'Nenhum registro de plantio, manejo ou colheita ainda.'}
         </p>

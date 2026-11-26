@@ -55,9 +55,9 @@ describe('Fluxo de canteiros no App', () => {
 
     fireEvent.click(screen.getByRole('button', { name: /produção/i }))
     const history = screen.getByRole('region', { name: 'Histórico de plantio e manejo' })
-    expect(within(history).getByText('Canteiro 2')).toBeInTheDocument()
-    expect(within(history).getByText('Rúcula')).toBeInTheDocument()
-    expect(within(history).getByText('Plantio na borda do canteiro.')).toBeInTheDocument()
+    const historyRow = within(history).getByRole('row', { name: /Canteiro 2/ })
+    expect(within(historyRow).getByText('Rúcula')).toBeInTheDocument()
+    expect(within(historyRow).getByText('Plantio na borda do canteiro.')).toBeInTheDocument()
 
     const stored = JSON.parse(window.localStorage.getItem(CANTEIROS_STORAGE_KEY) ?? '{}') as {
       canteiros: { id: number; currentCulture: string }[]

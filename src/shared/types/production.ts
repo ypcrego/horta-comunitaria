@@ -27,6 +27,7 @@ export interface PlantingRecord {
   sector: string
   type: PlantingRecordType
   culture: string
+  date: string
   quantityKg: number | null
   notes: string
   actor: string

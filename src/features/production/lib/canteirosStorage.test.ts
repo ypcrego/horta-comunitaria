@@ -1,6 +1,11 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 import { CANTEIROS_STORAGE_KEY, INITIAL_CANTEIROS } from '@/shared/constants'
-import { addPlantingRecord, createInitialCanteirosState } from './canteiros'
+import {
+  addCanteiro,
+  addPlantingRecord,
+  createInitialCanteirosState,
+  updateCanteiro,
+} from './canteiros'
 import {
   clearCanteirosState,
   isCanteirosState,
@@ -79,5 +84,90 @@ describe('persistência dos canteiros em localStorage', () => {
     clearCanteirosState()
 
     expect(window.localStorage.getItem(CANTEIROS_STORAGE_KEY)).toBeNull()
+  })
+
+  it('migra registros antigos sem data usando a data de criação', () => {
+    const planted = addPlantingRecord(
+      createInitialCanteirosState(),
+      {
+        canteiroId: 5,
+        type: 'plantio',
+        culture: 'Milho verde',
+        quantityKg: null,
+        notes: '',
+      },
+      'Ana Beatriz Costa',
+      CREATED_AT,
+    )
+    const legacy = JSON.parse(JSON.stringify(planted.state)) as {
+      canteiros: unknown[]
+      records: Record<string, unknown>[]
+    }
+    delete legacy.records[0].date
+    window.localStorage.setItem(CANTEIROS_STORAGE_KEY, JSON.stringify(legacy))
+
+    expect(isCanteirosState(legacy)).toBe(true)
+    const restored = loadCanteirosState()
+    expect(restored.records[0].date).toBe('2026-11-25')
+  })
+
+  it('ignora registros com data inválida', () => {
+    const planted = addPlantingRecord(
+      createInitialCanteirosState(),
+      {
+        canteiroId: 1,
+        type: 'manejo',
+        culture: 'Alface crespa',
+        quantityKg: null,
+        notes: '',
+        date: '2026-11-10',
+      },
+      'Ana Beatriz Costa',
+      CREATED_AT,
+    )
+    window.localStorage.setItem(
+      CANTEIROS_STORAGE_KEY,
+      JSON.stringify({
+        ...planted.state,
+        records: [{ ...planted.state.records[0], date: '2026-02-30' }],
+      }),
+    )
+
+    const restored = loadCanteirosState()
+    expect(restored.records).toEqual([])
+    expect(restored.canteiros).toHaveLength(INITIAL_CANTEIROS.length)
+  })
+
+  it('persiste o cadastro e a edição de canteiros', () => {
+    const initial = createInitialCanteirosState()
+    const created = addCanteiro(initial, {
+      name: 'Canteiro 7',
+      sector: 'Setor D — Frutíferas',
+      currentCulture: 'Mamão',
+      status: 'em-preparo',
+      responsible: 'Mariana Alves',
+      plantedAt: null,
+    })
+    expect(created.error).toBeNull()
+    saveCanteirosState(created.state)
+
+    const updated = updateCanteiro(created.state, 7, {
+      name: 'Canteiro 7',
+      sector: 'Setor D — Frutíferas',
+      currentCulture: 'Mamão',
+      status: 'em-cultivo',
+      responsible: 'Carlos Eduardo Lima',
+      plantedAt: '2026-11-20',
+    })
+    expect(updated.error).toBeNull()
+    saveCanteirosState(updated.state)
+
+    const restored = loadCanteirosState()
+    expect(restored.canteiros.find((canteiro) => canteiro.id === 7)).toMatchObject({
+      currentCulture: 'Mamão',
+      status: 'em-cultivo',
+      responsible: 'Carlos Eduardo Lima',
+      plantedAt: '2026-11-20',
+    })
   })
 })

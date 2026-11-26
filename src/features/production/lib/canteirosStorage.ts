@@ -4,6 +4,7 @@ import {
   createInitialCanteirosState,
   isCanteiroStatus,
   isPlantingRecordType,
+  isValidDateString,
 } from './canteiros'
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -14,39 +15,94 @@ function isFiniteNumber(value: unknown): value is number {
   return typeof value === 'number' && Number.isFinite(value)
 }
 
-function isCanteiro(value: unknown): value is Canteiro {
-  if (!isRecord(value)) return false
-  return (
-    isFiniteNumber(value.id) &&
-    typeof value.name === 'string' &&
-    typeof value.sector === 'string' &&
-    typeof value.currentCulture === 'string' &&
-    isCanteiroStatus(value.status) &&
-    typeof value.responsible === 'string' &&
-    (value.plantedAt === null || typeof value.plantedAt === 'string')
-  )
+function isNotNull<Value>(value: Value | null): value is Value {
+  return value !== null
 }
 
-function isPlantingRecord(value: unknown): value is PlantingRecord {
-  if (!isRecord(value)) return false
-  return (
-    isFiniteNumber(value.id) &&
-    isFiniteNumber(value.canteiroId) &&
-    typeof value.canteiroName === 'string' &&
-    typeof value.sector === 'string' &&
-    isPlantingRecordType(value.type) &&
-    typeof value.culture === 'string' &&
-    (value.quantityKg === null || isFiniteNumber(value.quantityKg)) &&
-    typeof value.notes === 'string' &&
-    typeof value.actor === 'string' &&
-    typeof value.createdAt === 'string'
-  )
+function normalizeCanteiro(value: unknown): Canteiro | null {
+  if (!isRecord(value)) return null
+  if (
+    !isFiniteNumber(value.id) ||
+    typeof value.name !== 'string' ||
+    typeof value.sector !== 'string' ||
+    typeof value.currentCulture !== 'string' ||
+    !isCanteiroStatus(value.status) ||
+    typeof value.responsible !== 'string' ||
+    !(value.plantedAt === null || isValidDateString(value.plantedAt))
+  ) {
+    return null
+  }
+
+  return {
+    id: value.id,
+    name: value.name,
+    sector: value.sector,
+    currentCulture: value.currentCulture,
+    status: value.status,
+    responsible: value.responsible,
+    plantedAt: value.plantedAt,
+  }
+}
+
+function normalizePlantingRecord(value: unknown): PlantingRecord | null {
+  if (!isRecord(value)) return null
+  if (
+    !isFiniteNumber(value.id) ||
+    !isFiniteNumber(value.canteiroId) ||
+    typeof value.canteiroName !== 'string' ||
+    typeof value.sector !== 'string' ||
+    !isPlantingRecordType(value.type) ||
+    typeof value.culture !== 'string' ||
+    !(value.quantityKg === null || isFiniteNumber(value.quantityKg)) ||
+    typeof value.notes !== 'string' ||
+    typeof value.actor !== 'string' ||
+    typeof value.createdAt !== 'string'
+  ) {
+    return null
+  }
+
+  const legacyDate = value.createdAt.slice(0, 10)
+  let date: string | null = null
+  if (typeof value.date === 'string') {
+    date = value.date
+  } else if (isValidDateString(legacyDate)) {
+    date = legacyDate
+  }
+  if (!isValidDateString(date)) return null
+
+  return {
+    id: value.id,
+    canteiroId: value.canteiroId,
+    canteiroName: value.canteiroName,
+    sector: value.sector,
+    type: value.type,
+    culture: value.culture,
+    date,
+    quantityKg: value.quantityKg,
+    notes: value.notes,
+    actor: value.actor,
+    createdAt: value.createdAt,
+  }
+}
+
+function normalizeCanteirosState(value: unknown): CanteirosState | null {
+  if (!isRecord(value)) return null
+  if (!Array.isArray(value.canteiros) || !Array.isArray(value.records)) return null
+
+  const canteiros = value.canteiros.map(normalizeCanteiro)
+  if (canteiros.some((canteiro) => canteiro === null)) return null
+
+  const records = value.records.map(normalizePlantingRecord)
+  if (records.some((record) => record === null)) return null
+
+  return {
+    canteiros: canteiros.filter(isNotNull),
+    records: records.filter(isNotNull),
+  }
 }
 
 export function isCanteirosState(value: unknown): value is CanteirosState {
-  if (!isRecord(value)) return false
-  if (!Array.isArray(value.canteiros) || !Array.isArray(value.records)) return false
-  return value.canteiros.every(isCanteiro) && value.records.every(isPlantingRecord)
+  return normalizeCanteirosState(value) !== null
 }
 
 export function loadCanteirosState(): CanteirosState {
@@ -59,7 +115,7 @@ export function loadCanteirosState(): CanteirosState {
     if (!rawState) return createInitialCanteirosState()
 
     const parsed: unknown = JSON.parse(rawState)
-    return isCanteirosState(parsed) ? parsed : createInitialCanteirosState()
+    return normalizeCanteirosState(parsed) ?? createInitialCanteirosState()
   } catch {
     return createInitialCanteirosState()
   }
