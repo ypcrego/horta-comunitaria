@@ -10,6 +10,7 @@
     "format": "oxfmt",
     "lint": "oxlint --deny-warnings .",
     "lint:fix": "oxlint --fix .",
+    "typecheck": "tsc --noEmit",
     "test": "vitest run"
   },
   "dependencies": {
