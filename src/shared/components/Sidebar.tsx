@@ -61,6 +61,21 @@ export function Sidebar({
         </svg>
       ),
     },
+    {
+      id: 'forum',
+      label: 'Fórum',
+      icon: (
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+          <path
+            d="M2 3.5h12v7H7.5L4 13v-2.5H2v-7z"
+            stroke="currentColor"
+            strokeWidth="1.3"
+            strokeLinejoin="round"
+          />
+          <path d="M5 6h6M5 8h4" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" />
+        </svg>
+      ),
+    },
   ]
 
   return (

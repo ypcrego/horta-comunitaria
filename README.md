@@ -38,12 +38,12 @@ Logins de demonstração (dados mock, sem banco de dados):
 | Coordenador | coordenador@ufrn.br | senha123 |
 | Voluntário | voluntario@ufrn.br | senha123 |
 
-O que esperar: o Coordenador cadastra produção, agenda eventos e gerencia o estoque (cadastro de ferramentas e devoluções). O Voluntário visualiza os dados e pode solicitar a retirada de ferramentas disponíveis.
+O que esperar: o Coordenador cadastra produção, agenda eventos e gerencia o estoque (cadastro de ferramentas e devoluções). O Voluntário visualiza os dados e pode solicitar a retirada de ferramentas disponíveis. Toda a equipe pode participar do Fórum criando tópicos e respondendo mensagens. Os tópicos e respostas do Fórum ficam salvos no `localStorage` do navegador.
 
 ## Estrutura
 ```
 src/
-  features/   auth, dashboard, production, events, inventory
+  features/   auth, dashboard, production, events, inventory, forum
   shared/     types, constants, utils, components
   App.tsx     composição (navegação e sessão)
 ```
