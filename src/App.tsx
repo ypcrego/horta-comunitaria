@@ -7,6 +7,7 @@ import { Dashboard } from '@/features/dashboard'
 import { ProducaoPage } from '@/features/production'
 import { EstoquePage } from '@/features/inventory'
 import { EventosPage } from '@/features/events'
+import { ForumPage } from '@/features/forum'
 
 export default function App() {
   const [user, setUser] = useState<User | null>(null)
@@ -48,6 +49,7 @@ export default function App() {
         {activeTab === 'eventos' && (
           <EventosPage user={user} events={events} onAdd={addEvent} />
         )}
+        {activeTab === 'forum' && <ForumPage user={user} />}
       </main>
     </div>
   )
