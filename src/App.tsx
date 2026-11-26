@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import type { User, Tab, Production, Event } from '@/shared/types'
 import { INITIAL_PRODUCTIONS, INITIAL_EVENTS } from '@/shared/constants'
+import { nextId } from '@/shared/utils'
 import { Sidebar } from '@/shared/components'
 import { LoginPage } from '@/features/auth'
 import { Dashboard } from '@/features/dashboard'
@@ -15,11 +16,11 @@ export default function App() {
   const [events, setEvents] = useState<Event[]>(INITIAL_EVENTS)
 
   function addProduction(p: Omit<Production, 'id'>) {
-    setProductions((prev) => [...prev, { ...p, id: prev.length + 1 }])
+    setProductions((prev) => [...prev, { ...p, id: nextId(prev) }])
   }
 
   function addEvent(e: Omit<Event, 'id'>) {
-    setEvents((prev) => [...prev, { ...e, id: prev.length + 1 }])
+    setEvents((prev) => [...prev, { ...e, id: nextId(prev) }])
   }
 
   if (!user) {
