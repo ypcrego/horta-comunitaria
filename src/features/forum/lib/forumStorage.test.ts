@@ -77,6 +77,54 @@ describe('persistência do fórum em localStorage', () => {
     expect(loadForumState().topics).toHaveLength(INITIAL_FORUM_TOPICS.length)
   })
 
+  it('rejeita tópicos com ids duplicados', () => {
+    const state = createInitialForumState()
+    const invalidState = {
+      topics: [...state.topics, { ...state.topics[0] }],
+    }
+    window.localStorage.setItem(FORUM_STORAGE_KEY, JSON.stringify(invalidState))
+
+    expect(isForumState(invalidState)).toBe(false)
+    expect(loadForumState().topics).toHaveLength(INITIAL_FORUM_TOPICS.length)
+  })
+
+  it('rejeita resposta vinculada a outro tópico', () => {
+    const state = createInitialForumState()
+    const invalidState = {
+      topics: state.topics.map((topic) =>
+        topic.id === 1
+          ? {
+              ...topic,
+              replies: topic.replies.map((reply, index) =>
+                index === 0 ? { ...reply, topicId: 2 } : reply,
+              ),
+            }
+          : topic,
+      ),
+    }
+    window.localStorage.setItem(FORUM_STORAGE_KEY, JSON.stringify(invalidState))
+
+    expect(isForumState(invalidState)).toBe(false)
+    expect(loadForumState().topics).toHaveLength(INITIAL_FORUM_TOPICS.length)
+  })
+
+  it('rejeita respostas com ids duplicados entre tópicos', () => {
+    const state = createInitialForumState()
+    const invalidState = {
+      topics: state.topics.map((topic) =>
+        topic.id === 2
+          ? {
+              ...topic,
+              replies: [{ ...topic.replies[0], id: 1 }],
+            }
+          : topic,
+      ),
+    }
+    window.localStorage.setItem(FORUM_STORAGE_KEY, JSON.stringify(invalidState))
+
+    expect(isForumState(invalidState)).toBe(false)
+  })
+
   it('remove o estado salvo do localStorage', () => {
     saveForumState(createInitialForumState())
     expect(window.localStorage.getItem(FORUM_STORAGE_KEY)).not.toBeNull()

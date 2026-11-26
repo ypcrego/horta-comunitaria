@@ -35,9 +35,29 @@ function isForumTopic(value: unknown): value is ForumTopic {
   )
 }
 
+function hasValidForumIntegrity(state: ForumState): boolean {
+  const topicIds = new Set<number>()
+  const replyIds = new Set<number>()
+
+  for (const topic of state.topics) {
+    if (topicIds.has(topic.id)) return false
+    topicIds.add(topic.id)
+
+    for (const reply of topic.replies) {
+      if (replyIds.has(reply.id) || reply.topicId !== topic.id) return false
+      replyIds.add(reply.id)
+    }
+  }
+
+  return true
+}
+
 export function isForumState(value: unknown): value is ForumState {
   if (!isRecord(value)) return false
-  return Array.isArray(value.topics) && value.topics.every(isForumTopic)
+  if (!Array.isArray(value.topics)) return false
+  if (!value.topics.every(isForumTopic)) return false
+
+  return hasValidForumIntegrity({ topics: value.topics })
 }
 
 export function loadForumState(): ForumState {

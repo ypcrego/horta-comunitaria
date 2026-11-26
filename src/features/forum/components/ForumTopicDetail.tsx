@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import type React from 'react'
 import type { ForumTopic, User } from '@/shared/types'
 import { formatDateTime } from '@/shared/utils'
@@ -22,9 +22,14 @@ export function ForumTopicDetail({
 }) {
   const [reply, setReply] = useState('')
   const [feedback, setFeedback] = useState<Feedback | null>(null)
+  const titleRef = useRef<HTMLHeadingElement>(null)
   const replies = [...topic.replies].sort((first, second) =>
     first.createdAt.localeCompare(second.createdAt),
   )
+
+  useEffect(() => {
+    titleRef.current?.focus()
+  }, [topic.id])
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -62,7 +67,12 @@ export function ForumTopicDetail({
             {topic.replies.length} {topic.replies.length === 1 ? 'resposta' : 'respostas'}
           </span>
         </div>
-        <h3 className="text-xl mb-2" style={{ fontFamily: 'Fraunces, serif' }}>
+        <h3
+          ref={titleRef}
+          tabIndex={-1}
+          className="text-xl mb-2 outline-none"
+          style={{ fontFamily: 'Fraunces, serif' }}
+        >
           {topic.title}
         </h3>
         <p className="text-sm whitespace-pre-line mb-4">{topic.message}</p>

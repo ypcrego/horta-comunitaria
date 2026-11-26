@@ -135,6 +135,9 @@ describe('ForumPage', () => {
       name: 'Tópico Comunicado: nova escala de rega',
     })
     expect(
+      screen.getByRole('heading', { level: 3, name: 'Comunicado: nova escala de rega' }),
+    ).toHaveFocus()
+    expect(
       within(detail).getByText('Nenhuma resposta ainda. Seja a primeira pessoa a comentar.'),
     ).toBeInTheDocument()
 
@@ -157,6 +160,8 @@ describe('ForumPage', () => {
     })
 
     fireEvent.click(within(detail).getByRole('button', { name: '← Voltar ao fórum' }))
+
+    expect(screen.getByRole('button', { name: 'Comunicado: nova escala de rega' })).toHaveFocus()
 
     const topicCard = screen.getByRole('article', {
       name: 'Tópico: Comunicado: nova escala de rega',
