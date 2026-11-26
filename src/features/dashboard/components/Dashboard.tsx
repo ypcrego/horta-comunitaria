@@ -1,6 +1,9 @@
 import type { User, Production, Event } from '@/shared/types'
+import { PLANTING_RECORD_TYPE_LABELS } from '@/shared/constants'
 import { today, formatDate } from '@/shared/utils'
 import { TypeBadge } from '@/shared/components'
+import { useCanteiros } from '@/features/production/hooks/useCanteiros'
+import { getCanteiroStats } from '@/features/production/lib/canteiros'
 
 export function Dashboard({
   user,
@@ -11,6 +14,10 @@ export function Dashboard({
   productions: Production[]
   events: Event[]
 }) {
+  const { canteiros, records } = useCanteiros()
+  const canteiroStats = getCanteiroStats({ canteiros, records })
+  const lastRecord = records[records.length - 1] ?? null
+
   const totalKg = productions.reduce((s, p) => s + p.weightKg, 0)
   const compostKg = productions.filter((p) => p.type === 'Composto').reduce((s, p) => s + p.weightKg, 0)
   const foodKg = totalKg - compostKg
@@ -64,6 +71,76 @@ export function Dashboard({
             </p>
           </div>
         ))}
+      </div>
+
+      {/* Canteiros */}
+      <div
+        className="mb-6 p-5"
+        style={{ background: 'var(--card)', border: '1px solid var(--border)', borderRadius: 'var(--radius)' }}
+      >
+        <div className="flex flex-wrap items-center justify-between gap-2 mb-4">
+          <h3
+            className="text-base"
+            style={{ fontFamily: 'Fraunces, serif', color: 'var(--foreground)' }}
+          >
+            Canteiros e plantio
+          </h3>
+          <span className="text-xs" style={{ color: 'var(--muted-foreground)' }}>
+            {canteiroStats.total} canteiros mapeados
+          </span>
+        </div>
+
+        <div
+          className="grid gap-3"
+          style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(130px, 1fr))' }}
+        >
+          <div>
+            <p className="text-xs uppercase tracking-widest mb-1" style={{ color: 'var(--muted-foreground)' }}>
+              Em cultivo
+            </p>
+            <p
+              data-testid="dashboard-canteiros-cultivo"
+              className="text-2xl"
+              style={{ fontFamily: 'Fraunces, serif', color: 'var(--primary)' }}
+            >
+              {canteiroStats.emCultivo}
+            </p>
+          </div>
+          <div>
+            <p className="text-xs uppercase tracking-widest mb-1" style={{ color: 'var(--muted-foreground)' }}>
+              Em preparo/descanso
+            </p>
+            <p
+              data-testid="dashboard-canteiros-descanso"
+              className="text-2xl"
+              style={{ fontFamily: 'Fraunces, serif', color: 'var(--primary)' }}
+            >
+              {canteiroStats.emPreparo + canteiroStats.emDescanso}
+            </p>
+          </div>
+          <div>
+            <p className="text-xs uppercase tracking-widest mb-1" style={{ color: 'var(--muted-foreground)' }}>
+              Registros no histórico
+            </p>
+            <p
+              data-testid="dashboard-canteiros-registros"
+              className="text-2xl"
+              style={{ fontFamily: 'Fraunces, serif', color: 'var(--primary)' }}
+            >
+              {canteiroStats.registros}
+            </p>
+          </div>
+        </div>
+
+        <p className="text-xs mt-4" style={{ color: 'var(--muted-foreground)' }}>
+          {lastRecord
+            ? `Última atividade: ${PLANTING_RECORD_TYPE_LABELS[lastRecord.type]} de ${
+                lastRecord.culture
+              } no ${lastRecord.canteiroName}, por ${lastRecord.actor} em ${formatDate(
+                lastRecord.date,
+              )}.`
+            : 'Nenhum registro de plantio, manejo ou colheita ainda.'}
+        </p>
       </div>
 
       {/* Recent productions */}

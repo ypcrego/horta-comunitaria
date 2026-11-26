@@ -1,9 +1,30 @@
 import { useState } from 'react'
 import type React from 'react'
-import type { User, Production } from '@/shared/types'
+import type { Canteiro, PlantingRecordType, Production, User } from '@/shared/types'
 import { PRODUCTION_TYPES, TYPE_COLORS } from '@/shared/constants'
 import { today, formatDate } from '@/shared/utils'
 import { TypeBadge } from '@/shared/components'
+import { useCanteiros } from '../hooks/useCanteiros'
+import {
+  getCanteiroSectors,
+  type NewCanteiroInput,
+  type NewPlantingRecordInput,
+} from '../lib/canteiros'
+import { CanteiroForm } from './CanteiroForm'
+import { CanteiroMap } from './CanteiroMap'
+import { PlantingHistory } from './PlantingHistory'
+import { PlantingRecordForm } from './PlantingRecordForm'
+
+type Feedback = {
+  type: 'success' | 'error'
+  message: string
+}
+
+const RECORD_FEEDBACK_LABELS: Record<PlantingRecordType, string> = {
+  plantio: 'Plantio registrado',
+  manejo: 'Manejo registrado',
+  colheita: 'Colheita registrada',
+}
 
 export function ProducaoPage({
   user,
@@ -14,11 +35,25 @@ export function ProducaoPage({
   productions: Production[]
   onAdd: (p: Omit<Production, 'id'>) => void
 }) {
+  const {
+    canteiros,
+    records,
+    registerRecord,
+    addCanteiro,
+    updateCanteiro,
+  } = useCanteiros()
   const [showForm, setShowForm] = useState(false)
   const [type, setType] = useState(PRODUCTION_TYPES[0])
   const [weight, setWeight] = useState('')
   const [success, setSuccess] = useState(false)
   const [filterType, setFilterType] = useState('Todos')
+
+  const [showCanteiroForm, setShowCanteiroForm] = useState(false)
+  const [editingCanteiro, setEditingCanteiro] = useState<Canteiro | null>(null)
+  const [canteiroFeedback, setCanteiroFeedback] = useState<Feedback | null>(null)
+
+  const [showPlantingForm, setShowPlantingForm] = useState(false)
+  const [plantingFeedback, setPlantingFeedback] = useState<Feedback | null>(null)
 
   const isCoord = user.role === 'coordenador'
 
@@ -41,20 +76,83 @@ export function ProducaoPage({
     setTimeout(() => setSuccess(false), 3000)
   }
 
+  function openPlantingForm() {
+    if (showPlantingForm) {
+      setShowPlantingForm(false)
+      return
+    }
+
+    setPlantingFeedback(null)
+    setCanteiroFeedback(null)
+    setShowPlantingForm(true)
+  }
+
+  function handlePlantingSubmit(input: NewPlantingRecordInput): string | null {
+    const error = registerRecord(input, user.name)
+    if (error) return error
+
+    const canteiro = canteiros.find((candidate) => candidate.id === input.canteiroId)
+    setPlantingFeedback({
+      type: 'success',
+      message: `${RECORD_FEEDBACK_LABELS[input.type]} no histórico do ${
+        canteiro?.name ?? 'canteiro'
+      }.`,
+    })
+    setShowPlantingForm(false)
+    setCanteiroFeedback(null)
+    return null
+  }
+
+  function openNewCanteiroForm() {
+    setEditingCanteiro(null)
+    setCanteiroFeedback(null)
+    setPlantingFeedback(null)
+    setShowCanteiroForm(true)
+  }
+
+  function openEditCanteiroForm(canteiro: Canteiro) {
+    setEditingCanteiro(canteiro)
+    setCanteiroFeedback(null)
+    setPlantingFeedback(null)
+    setShowCanteiroForm(true)
+  }
+
+  function closeCanteiroForm() {
+    setShowCanteiroForm(false)
+    setEditingCanteiro(null)
+  }
+
+  function handleCanteiroSubmit(input: NewCanteiroInput): string | null {
+    const error = editingCanteiro
+      ? updateCanteiro(editingCanteiro.id, input)
+      : addCanteiro(input)
+    if (error) return error
+
+    setCanteiroFeedback({
+      type: 'success',
+      message: editingCanteiro
+        ? `Canteiro "${input.name}" atualizado com sucesso.`
+        : `Canteiro "${input.name}" criado com sucesso.`,
+    })
+    setPlantingFeedback(null)
+    closeCanteiroForm()
+    return null
+  }
+
   return (
     <div>
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-wrap items-start justify-between gap-4 mb-8">
         <div>
           <h2 className="text-3xl mb-1" style={{ fontFamily: 'Fraunces, serif' }}>
             Produção
           </h2>
           <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>
-            Registro de alimentos e compostagem em kg.
+            Mapa dos setores e canteiros, histórico de plantio e registros de colheita em kg.
           </p>
         </div>
-        {isCoord && (
+        <div className="flex flex-wrap gap-2">
           <button
-            onClick={() => setShowForm(!showForm)}
+            onClick={openPlantingForm}
             className="px-4 py-2.5 text-sm font-medium transition-opacity hover:opacity-90"
             style={{
               background: 'var(--primary)',
@@ -62,9 +160,22 @@ export function ProducaoPage({
               borderRadius: 'var(--radius)',
             }}
           >
-            + Novo registro
+            + Novo plantio
           </button>
-        )}
+          {isCoord && (
+            <button
+              onClick={() => setShowForm(!showForm)}
+              className="px-4 py-2.5 text-sm font-medium transition-opacity hover:opacity-90"
+              style={{
+                background: 'var(--secondary)',
+                color: 'var(--secondary-foreground)',
+                borderRadius: 'var(--radius)',
+              }}
+            >
+              + Novo registro
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Restricted notice for volunteers */}
@@ -79,8 +190,78 @@ export function ProducaoPage({
           }}
         >
           Você está visualizando os dados como voluntário. O cadastro de novos registros é restrito ao coordenador.
+          O histórico de plantio, manejo e colheita dos canteiros está aberto a toda a equipe.
         </div>
       )}
+
+      {canteiroFeedback && (
+        <div
+          role={canteiroFeedback.type === 'error' ? 'alert' : 'status'}
+          className="mb-4 px-4 py-3 text-sm"
+          style={{
+            background: canteiroFeedback.type === 'error' ? '#fdf0ec' : '#eaf4ec',
+            border: `1px solid ${canteiroFeedback.type === 'error' ? '#e2a090' : '#6aaa7a'}`,
+            borderRadius: 'var(--radius)',
+            color: canteiroFeedback.type === 'error' ? '#8a3b12' : '#1e4d2b',
+          }}
+        >
+          {canteiroFeedback.message}
+        </div>
+      )}
+
+      {plantingFeedback && (
+        <div
+          role={plantingFeedback.type === 'error' ? 'alert' : 'status'}
+          className="mb-4 px-4 py-3 text-sm"
+          style={{
+            background: plantingFeedback.type === 'error' ? '#fdf0ec' : '#eaf4ec',
+            border: `1px solid ${plantingFeedback.type === 'error' ? '#e2a090' : '#6aaa7a'}`,
+            borderRadius: 'var(--radius)',
+            color: plantingFeedback.type === 'error' ? '#8a3b12' : '#1e4d2b',
+          }}
+        >
+          {plantingFeedback.message}
+        </div>
+      )}
+
+      {showPlantingForm && (
+        <PlantingRecordForm
+          canteiros={canteiros}
+          defaultResponsible={user.name}
+          onSubmit={handlePlantingSubmit}
+          onCancel={() => setShowPlantingForm(false)}
+        />
+      )}
+
+      <CanteiroMap
+        canteiros={canteiros}
+        records={records}
+        canManage={isCoord}
+        onCreate={openNewCanteiroForm}
+        onEdit={openEditCanteiroForm}
+      >
+        {showCanteiroForm && (
+          <CanteiroForm
+            key={editingCanteiro?.id ?? 'new'}
+            canteiro={editingCanteiro}
+            sectors={getCanteiroSectors(canteiros)}
+            defaultResponsible={user.name}
+            onSubmit={handleCanteiroSubmit}
+            onCancel={closeCanteiroForm}
+          />
+        )}
+      </CanteiroMap>
+
+      <PlantingHistory records={records} canteiros={canteiros} />
+
+      <div className="pt-6 mb-6" style={{ borderTop: '1px solid var(--border)' }}>
+        <h3 className="text-xl mb-1" style={{ fontFamily: 'Fraunces, serif' }}>
+          Produção em kg
+        </h3>
+        <p className="text-sm" style={{ color: 'var(--muted-foreground)' }}>
+          Registro de alimentos e compostagem em kg.
+        </p>
+      </div>
 
       {success && (
         <div
@@ -96,7 +277,7 @@ export function ProducaoPage({
         </div>
       )}
 
-      {/* Form */}
+      {/* Production form */}
       {showForm && isCoord && (
         <div
           className="mb-6 p-5"
